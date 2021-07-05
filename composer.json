@@ -1,0 +1,24 @@
+{
+    "name": "relaypay/php-sdk",
+    "description": "Relay Pay PHP SDK",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Václav Greif",
+            "email": "info@vaclavgreif.cz"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/relaypay-public/merchant-php-client"
+        }
+    ],
+    "require": {
+        "relaypay-official/merchant-php-client": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {"RelayPay\\SDK\\": "src/"}
+    }
+}

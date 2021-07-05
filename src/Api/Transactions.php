@@ -41,13 +41,29 @@ class Transactions extends ApiRequest {
 	}
 
 	/**
+	 * @param $data
+	 *
 	 * @return EcommerceResponse
 	 * @throws ApiException
 	 */
-	public function createTransaction( $data ) {
+	public function createTransaction( $data ): EcommerceResponse {
+		$body = $this->getEcommerceIncomingRequest( $data );
+		$this->setAuthorizationHeader();
+		$sign = $this->generateSignature( $this->getEcommerceIncomingRequestData( $body ) );
+		$this->setSignHeader( $sign );
+
+		return $this->getClient()->setEcommerceRequest( $body, );
+	}
+
+	/**
+	 * @param $data
+	 *
+	 * @return EcommerceIncomingRequest
+	 */
+	public function getEcommerceIncomingRequest( $data ): EcommerceIncomingRequest {
 		$data['merchantId'] = $data['merchantId'] ?? $this->getCredentials()->getEmail();
 
-		$body               = new EcommerceIncomingRequest();
+		$body = new EcommerceIncomingRequest();
 
 		foreach ( $data as $key => $value ) {
 			$setter = sprintf( 'set%s', ucfirst( $key ) );
@@ -55,12 +71,29 @@ class Transactions extends ApiRequest {
 				$body->$setter( $value );
 			}
 		}
-		$this->setAuthorizationHeader();
-		$data = Utils::streamFor( $body )->getContents();
-		$sign = $this->generateSignature( $data );
-		$this->setSignHeader( $sign );
 
-		return $this->getClient()->setEcommerceRequest( $body, );
+		return $body;
+	}
+
+	/**
+	 * Pass args to this method to get the sign with added args
+	 * @param  array  $data
+	 *
+	 * @return false|string
+	 */
+	public function getSignForRequest( array $data ) {
+		$body = $this->getEcommerceIncomingRequest( $data );
+
+		return $this->generateSignature( $this->getEcommerceIncomingRequestData( $body ) );
+	}
+
+	/**
+	 * @param  EcommerceIncomingRequest  $request
+	 *
+	 * @return string
+	 */
+	public function getEcommerceIncomingRequestData( EcommerceIncomingRequest $request ): string {
+		return Utils::streamFor( $request )->getContents();
 	}
 
 	/**

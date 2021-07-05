@@ -9,14 +9,8 @@
             "email": "info@vaclavgreif.cz"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/relaypay-public/merchant-php-client"
-        }
-    ],
     "require": {
-        "relaypay-official/merchant-php-client": "dev-main"
+        "relaypay-official/merchant-php-client": "^1.0"
     },
     "autoload": {
         "psr-4": {"RelayPay\\SDK\\": "src/"}

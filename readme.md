@@ -5,7 +5,7 @@ This package provides an official PHP SDK to interact with the RelayPay API.
 ## Installation
 
 Use Composer to install the package:
-`composer require relaypay-official/php-sdk`
+`composer require relaypay-official/merchant-php-sdk`
 
 ## Quick start
 Setup the client:

@@ -11,7 +11,7 @@ use RelayPay\Configuration;
 use RelayPay\SDK\Api\Transactions;
 
 class RelayPay {
-	const URL_TEST = 'https://sandbox-api.relaypay.io';
+	const URL_TEST = 'https://api.sandbox.relaypay.io';
 	const URL_PROD = 'https://api.relaypay.io';
 
 	private $client;

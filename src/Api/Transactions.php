@@ -4,17 +4,16 @@ namespace RelayPay\SDK\Api;
 
 use GuzzleHttp\Psr7\Utils;
 use RelayPay\Api\ECommerceApi;
-use RelayPay\Api\TransactionsApi;
 use RelayPay\ApiException;
 use RelayPay\Model\EcommerceIncomingRequest;
 use RelayPay\Model\EcommerceMerchantTransaction;
 use RelayPay\Model\EcommerceResponse;
 use RelayPay\Model\PageEcommerceMerchantTransaction;
-use RelayPay\Model\TransactionRequest;
 use RelayPay\SDK\Abstracts\ApiRequest;
 
 /**
  * Class Transactions
+ *
  * @package RelayPay\SDK\Api
  * @property ECommerceApi $client
  */
@@ -27,9 +26,7 @@ class Transactions extends ApiRequest {
 		$page = $args['page'] ?? 1;
 		$size = $args['size'] ?? 20;
 
-		$this->setAuthorizationHeader();
-
-		return $this->getClient()->getMerchantTxs( $this->getCredentials()->getEmail(), $page, $size );
+		return $this->getClient()->getMerchantTxs( $this->getCredentials()->getPublicKey(), $this->getCredentials()->getEmail(), $page, $size );
 	}
 
 	public function setAuthorizationHeader() {
@@ -48,11 +45,9 @@ class Transactions extends ApiRequest {
 	 */
 	public function createTransaction( $data ): EcommerceResponse {
 		$body = $this->getEcommerceIncomingRequest( $data );
-		$this->setAuthorizationHeader();
 		$sign = $this->generateSignature( $this->getEcommerceIncomingRequestData( $body ) );
-		$this->setSignHeader( $sign );
 
-		return $this->getClient()->setEcommerceRequest( $body, );
+		return $this->getClient()->setEcommerceRequest( $this->getCredentials()->getPublicKey(), $this->getCredentials()->getEmail(), $sign, $body );
 	}
 
 	/**
@@ -77,7 +72,8 @@ class Transactions extends ApiRequest {
 
 	/**
 	 * Pass args to this method to get the sign with added args
-	 * @param  array  $data
+	 *
+	 * @param array $data
 	 *
 	 * @return false|string
 	 */
@@ -88,7 +84,7 @@ class Transactions extends ApiRequest {
 	}
 
 	/**
-	 * @param  EcommerceIncomingRequest  $request
+	 * @param EcommerceIncomingRequest $request
 	 *
 	 * @return string
 	 */
@@ -101,8 +97,6 @@ class Transactions extends ApiRequest {
 	 * @throws ApiException
 	 */
 	public function getTransaction( $orderId ) {
-		$this->setAuthorizationHeader();
-
-		return $this->getClient()->getMerchantTransaction( $this->getCredentials()->getEmail(), $orderId );
+		return $this->getClient()->getMerchantTransaction( $this->getCredentials()->getPublicKey(), $this->getCredentials()->getEmail(), $orderId );
 	}
 }

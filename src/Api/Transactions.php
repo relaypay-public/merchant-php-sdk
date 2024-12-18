@@ -62,7 +62,7 @@ class Transactions extends ApiRequest {
 
 		foreach ( $data as $key => $value ) {
 			$setter = sprintf( 'set%s', ucfirst( $key ) );
-			if ( method_exists( $body, $setter ) ) {
+			if ( $value && method_exists( $body, $setter ) ) {
 				$body->$setter( $value );
 			}
 		}
